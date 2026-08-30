@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>⚡ MILENA IS 14! | Super Fiesta de Cumpleaños</title>
+  <meta name="description" content="¡Estás invitado a la Super Fiesta de Cumpleaños número 14 de Milena! Temática Cómic de Superhéroes Pop-Art. 22 de Octubre, 16:00 hrs.">
+  <meta name="theme-color" content="#FFDE59">
+  
+  <!-- Open Graph / Meta para compartir -->
+  <meta property="og:title" content="⚡ MILENA IS 14! | Super Fiesta de Cumpleaños">
+  <meta property="og:description" content="¡Misión Secreta: Celebrar el cumpleaños 14 de Milena! Ven disfrazado de superhéroe. 22 de Octubre a las 16:00 HRS.">
+  <meta property="og:image" content="assets/milena_superhero.jpg">
+  <meta property="og:type" content="website">
+
+  <!-- Favicon Cómic -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💥</text></svg>">
+
+  <!-- Google Fonts: Bangers (Títulos Cómic), Luckiest Guy (Acentos), Montserrat (Lectura) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Luckiest+Guy&family=Montserrat:ital,wght@0,400;0,700;0,900;1,900&display=swap" rel="stylesheet">
+  
+  <!-- Estilos -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Fondo con Rayos de Cómic y Halftone -->
+  <div class="comic-bg-rays" aria-hidden="true"></div>
+  <div class="halftone-overlay" aria-hidden="true"></div>
+
+  <!-- Botón Flotante de Música / Bocina Superheroica -->
+  <aside class="floating-music-container" id="musicContainer">
+    <div class="music-speech-bubble" id="musicTooltip">
+      <span id="musicStatusText">🎵 ¡Toca para música!</span>
+    </div>
+    <button class="comic-music-btn" id="musicToggleBtn" aria-label="Reproducir o pausar música de superhéroes" title="Bocina Superheroica">
+      <div class="speaker-icon-wrap">
+        <span class="speaker-emoji" id="speakerIcon">📢</span>
+        <div class="sound-waves" id="soundWaves">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+      <span class="music-btn-label">BOCINA HEROICA</span>
+    </button>
+  </aside>
+
+  <!-- Contenedor Principal Optimizado para Móvil -->
+  <main class="comic-page-wrapper">
+
+    <!-- 1. ENCABEZADO / CÓMIC ISSUE #14 COVER -->
+    <header class="comic-panel hero-cover-panel">
+      <!-- Barra Superior de Historieta -->
+      <div class="comic-top-banner">
+        <div class="comic-logo-box">
+          <span class="logo-text">MILE COMICS</span>
+          <span class="logo-sub">#14 SPECIAL</span>
+        </div>
+        <div class="comic-date-badge">22 OCT • 2026</div>
+        <div class="comic-price-badge">¡EDICIÓN ÉPICA!</div>
+      </div>
+
+      <!-- Título Principal -->
+      <div class="hero-title-container">
+        <div class="action-burst-badge pow-badge" aria-hidden="true">POW!</div>
+        <h1 class="main-comic-title">
+          <span class="title-word title-milena">MILENA</span>
+          <span class="title-word title-is">IS</span>
+          <span class="title-word title-14">14!</span>
+        </h1>
+      </div>
+
+      <!-- Subtítulo en Globo de Diálogo (Speech Bubble) -->
+      <div class="speech-bubble hero-subtitle-bubble">
+        <p class="subtitle-text">¡Super Fiesta de Cumpleaños!</p>
+      </div>
+
+      <!-- Imagen Portada de la Superheroína -->
+      <div class="hero-image-frame">
+        <img src="assets/milena_superhero.jpg" alt="Milena Superheroína celebrando sus 14 años estilo Cómic Pop-Art" class="hero-cover-img" id="heroCoverImg">
+        <div class="image-corner-tag">ISSUE Nº 14</div>
+      </div>
+
+      <!-- Etiqueta Destacada: DRESS CODE SUPERHÉROES -->
+      <div class="dresscode-starburst-box" id="dressCodeBadge">
+        <div class="starburst-shape">
+          <div class="starburst-inner">
+            <span class="flash-icon">⚡</span>
+            <span class="dresscode-main-text">¡VEN DISFRAZADO!</span>
+            <span class="dresscode-sub-text">DRESS CODE OBLIGATORIO DE SUPERHÉROES O VILLANOS</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 2. CUENTA REGRESIVA (COUNTDOWN TIMER) -->
+    <section class="comic-panel countdown-panel" id="countdownSection">
+      <div class="panel-header-badge">
+        <span class="badge-icon">⏳</span>
+        <h2 class="panel-title">HORA CERO: CUENTA REGRESIVA</h2>
+      </div>
+      
+      <p class="mission-date-callout">
+        <span class="calendar-icon">🗓️</span> Jueves 22 de Octubre de 2026 • 16:00 HRS
+      </p>
+
+      <div class="countdown-grid" id="countdownGrid" aria-live="polite">
+        <div class="countdown-card" id="cardDays">
+          <div class="countdown-number" id="cdDays">00</div>
+          <div class="countdown-label">DÍAS</div>
+          <div class="card-dots-bg"></div>
+        </div>
+        <div class="countdown-card" id="cardHours">
+          <div class="countdown-number" id="cdHours">00</div>
+          <div class="countdown-label">HORAS</div>
+          <div class="card-dots-bg"></div>
+        </div>
+        <div class="countdown-card" id="cardMinutes">
+          <div class="countdown-number" id="cdMinutes">00</div>
+          <div class="countdown-label">MINUTOS</div>
+          <div class="card-dots-bg"></div>
+        </div>
+        <div class="countdown-card" id="cardSeconds">
+          <div class="countdown-number" id="cdSeconds">00</div>
+          <div class="countdown-label">SEGUNDOS</div>
+          <div class="card-dots-bg"></div>
+        </div>
+      </div>
+
+      <div class="countdown-status-box" id="countdownStatus">
+        <span class="zap-badge" aria-hidden="true">ZAP!</span>
+        <p class="status-msg">¡Prepara tus superpoderes, el conteo ha comenzado!</p>
+      </div>
+
+      <!-- Botón para Guardar en Calendario -->
+      <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Super+Fiesta+de+14+A%C3%B1os+de+Milena+%28Ven+Disfrazado%29&dates=20261022T220000Z/20261023T020000Z&details=%C2%A1Misi%C3%B3n+Superheroica%21+Cumplea%C3%B1os+14+de+Milena.+Dress+code+obligatorio%3A+Superh%C3%A9roes+o+Villanos.&location=Casa+Club+de+Torre+Miravalle" target="_blank" rel="noopener noreferrer" class="comic-btn btn-secondary calendar-btn" id="calendarAddBtn">
+        <span>📅</span> AGENDAR MISIÓN EN CALENDARIO
+      </a>
+    </section>
+
+    <!-- 3. DETALLES DE UBICACIÓN (BASE SECRETA) -->
+    <section class="comic-panel location-panel" id="locationSection">
+      <div class="panel-header-badge yellow-badge">
+        <span class="badge-icon">📍</span>
+        <h2 class="panel-title">BASE SECRETA DE ENCUENTRO</h2>
+      </div>
+
+      <div class="speech-bubble location-bubble">
+        <p class="location-label">COORDENADAS CONFIRMADAS:</p>
+        <p class="venue-name">Casa Club de Torre Miravalle</p>
+      </div>
+
+      <!-- Radar Cómic Interactivo -->
+      <div class="comic-radar-card">
+        <div class="radar-scan-circle">
+          <div class="radar-beam"></div>
+          <div class="radar-center-pin">📍</div>
+        </div>
+        <div class="radar-info">
+          <div class="radar-badge">ZONA DE OPERACIONES</div>
+          <p class="radar-desc">Punto de reunión para todos los miembros de la Liga de Superhéroes.</p>
+        </div>
+      </div>
+
+      <!-- Botón Abrir en Google Maps -->
+      <a href="https://www.google.com/maps/search/?api=1&query=Casa+Club+Torre+Miravalle" target="_blank" rel="noopener noreferrer" class="comic-btn btn-primary maps-btn" id="mapsBtn">
+        <span class="btn-icon">🗺️</span>
+        <span class="btn-text">ABRIR EN GOOGLE MAPS</span>
+      </a>
+    </section>
+
+    <!-- ITINERARIO / PLAN DE MISIÓN -->
+    <section class="comic-panel mission-plan-panel">
+      <div class="panel-header-badge red-badge">
+        <span class="badge-icon">⚡</span>
+        <h2 class="panel-title">PLAN DE LA MISIÓN</h2>
+      </div>
+
+      <div class="mission-timeline">
+        <div class="timeline-item">
+          <div class="timeline-time">16:00 HRS</div>
+          <div class="timeline-content">
+            <h3 class="timeline-title">🚪 Apertura de la Base Secreta</h3>
+            <p>Llegada de superhéroes, alfombra roja y fotos conmemorativas.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-time">17:30 HRS</div>
+          <div class="timeline-content">
+            <h3 class="timeline-title">🍕 Banquete de Superpoderes</h3>
+            <p>Snacks, bebidas y recarga de energía.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-time">19:00 HRS</div>
+          <div class="timeline-content">
+            <h3 class="timeline-title">🎂 Momento del Pastel Épico</h3>
+            <p>¡Las Mañanitas superheroicas y deseos de los 14 años!</p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-time">20:00 HRS</div>
+          <div class="timeline-content">
+            <h3 class="timeline-title">💃 Batalla de Baile & Fiesta</h3>
+            <p>Música, dinámicas y diversión extrema.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. CONFIRMACIÓN RSVP POR WHATSAPP -->
+    <section class="comic-panel rsvp-panel" id="rsvpSection">
+      <div class="action-burst-badge boom-badge" aria-hidden="true">BOOM!</div>
+      
+      <div class="panel-header-badge green-badge">
+        <span class="badge-icon">📲</span>
+        <h2 class="panel-title">CONFIRMAR ASISTENCIA</h2>
+      </div>
+
+      <div class="speech-bubble rsvp-bubble">
+        <p class="rsvp-callout-text">
+          ¡Tu lugar en el cuartel general está reservado! Confirma tu asistencia para preparar tus credenciales de superhéroe.
+        </p>
+      </div>
+
+      <!-- BOTÓN VERDE LLAMATIVO WHATSAPP -->
+      <a href="https://wa.me/5218110155686?text=%C2%A1Hola!%20Confirmo%20mi%20asistencia%20a%20la%20super%20fiesta%20de%2014%20a%C3%B1os%20de%20Milena%20el%2022%20de%20octubre." target="_blank" rel="noopener noreferrer" class="comic-btn btn-whatsapp" id="whatsappRsvpBtn">
+        <span class="btn-icon">💥</span>
+        <span class="btn-text">CONFIRMAR ASISTENCIA VÍA WHATSAPP</span>
+        <span class="whatsapp-logo-icon">💬</span>
+      </a>
+
+      <!-- Botón Compartir Invitación -->
+      <button class="comic-btn btn-share" id="shareInviteBtn" type="button">
+        <span>🚀</span> COMPARTIR ESTA INVITACIÓN
+      </button>
+
+      <div class="rsvp-footer-note">
+        <p>Número oficial de la misión: <strong>+52 1 81 1015 5686</strong></p>
+      </div>
+    </section>
+
+    <!-- PIE DE PÁGINA ESTILO CÓMIC -->
+    <footer class="comic-footer">
+      <div class="footer-barcode-box">
+        <div class="fake-barcode">||| | |||| || | ||| |||| | ||</div>
+        <p class="footer-copy">MILE COMICS UNIVERSE © 2026 • ALL HEROES WELCOME</p>
+      </div>
+      <p class="easter-egg-text">✨ Toca cualquier parte de la pantalla para activar efectos de cómic ✨</p>
+    </footer>
+
+  </main>
+
+  <!-- Notificación Toast de Cómic -->
+  <div class="comic-toast" id="comicToast" role="alert" aria-live="assertive"></div>
+
+  <!-- Contenedor para Onomatopeyas On-Click (POW, BAM, BOOM) -->
+  <div class="onomatopoeia-container" id="onomatopoeiaContainer" aria-hidden="true"></div>
+
+  <!-- Audio Elemento con Superhero Synth / Audio Fallback -->
+  <audio id="bgMusicAudio" loop preload="none">
+  </audio>
+
+  <!-- Script Principal -->
+  <script src="app.js"></script>
+</body>
+</html>
