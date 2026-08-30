@@ -1,8 +1,8 @@
 /**
- * ⚡ MILENA IS 14! - JAVASCRIPT LOGIC & AUDIO SYNTHESIZER
+ * ⚡ MILENA IS 14! - JAVASCRIPT LOGIC & SUPERHERO SOUNDTRACK ENGINE
  * Features:
  * - Real-time Countdown Timer (22 Oct 2026 16:00)
- * - Superhero Web Audio Synthesizer & Music Player
+ * - Epic Multi-Voice Superhero Soundtrack Synthesizer (Brass Lead, Hero Bass, Harmony & Beats)
  * - Interactive Click Onomatopoeias (POW!, BOOM!, ZAP!) with Sound FX
  * - WhatsApp RSVP & Native Share Integration
  */
@@ -75,9 +75,26 @@ function initCountdown() {
    2. REPRODUCTOR DE MÚSICA & SINTETIZADOR SUPERHEROICO (WEB AUDIO API)
    ========================================================================== */
 let audioCtx = null;
+let masterGain = null;
 let isMusicPlaying = false;
-let musicInterval = null;
-let musicStep = 0;
+let musicTimer = null;
+let currentBar = 0;
+
+function getAudioContext() {
+  if (!audioCtx) {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (AudioContextClass) {
+      audioCtx = new AudioContextClass();
+      masterGain = audioCtx.createGain();
+      masterGain.gain.setValueAtTime(0.55, audioCtx.currentTime); // Volumen óptimo
+      masterGain.connect(audioCtx.destination);
+    }
+  }
+  if (audioCtx && audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+  return audioCtx;
+}
 
 function initSuperheroAudio() {
   const musicBtn = document.getElementById('musicToggleBtn');
@@ -86,148 +103,235 @@ function initSuperheroAudio() {
 
   if (!musicBtn) return;
 
+  // Desbloquear audio en el primer toque de la pantalla (política de autoplay móvil)
+  const unlockAudio = () => {
+    getAudioContext();
+    document.removeEventListener('touchstart', unlockAudio);
+    document.removeEventListener('pointerdown', unlockAudio);
+  };
+  document.addEventListener('touchstart', unlockAudio, { passive: true });
+  document.addEventListener('pointerdown', unlockAudio, { passive: true });
+
   musicBtn.addEventListener('click', (e) => {
-    e.stopPropagation(); // Evitar disparar onomatopeya en el botón
+    e.stopPropagation();
     toggleMusic();
   });
 
   function toggleMusic() {
-    if (!audioCtx) {
-      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-      if (AudioContextClass) {
-        audioCtx = new AudioContextClass();
-      }
-    }
-
-    if (audioCtx && audioCtx.state === 'suspended') {
-      audioCtx.resume();
+    const ctx = getAudioContext();
+    if (!ctx) {
+      showComicToast('⚠️ Tu navegador no soporta Web Audio');
+      return;
     }
 
     if (isMusicPlaying) {
-      stopSuperheroAnthem();
+      stopSuperheroMusic();
       isMusicPlaying = false;
       musicBtn.classList.remove('is-playing');
       if (speakerIcon) speakerIcon.textContent = '🔈';
-      if (musicTooltip) musicTooltip.textContent = '🔇 En pausa - Tocar para música';
-      showComicToast('🔇 Música pausada');
+      if (musicTooltip) musicTooltip.textContent = '🎵 ¡Toca para música!';
+      showComicToast('🔇 Música Pausada');
     } else {
-      startSuperheroAnthem();
       isMusicPlaying = true;
       musicBtn.classList.add('is-playing');
-      if (speakerIcon) speakerIcon.textContent = '📢';
-      if (musicTooltip) musicTooltip.textContent = '🔊 ¡Música Superheroica!';
-      showComicToast('⚡ ¡Música Heroica Activada!');
+      if (speakerIcon) speakerIcon.textContent = '🔊';
+      if (musicTooltip) musicTooltip.textContent = '💥 ¡Sonando Épico!';
+      showComicToast('⚡ ¡Música Superheroica Activada!');
+      startSuperheroMusicLoop();
     }
   }
 }
 
 /**
- * Generador de Fanfarria y Tema Musical de Superhéroes con Web Audio API
+ * TEMA MUSICAL SUPERHEROICO ÉPICO
+ * Estilo Fanfarria de Superhéroes / Avengers / Marvel Comics
  */
-function startSuperheroAnthem() {
-  if (!audioCtx) return;
+function startSuperheroMusicLoop() {
+  if (!isMusicPlaying) return;
+  const ctx = getAudioContext();
+  if (!ctx) return;
 
-  const notes = {
-    'C4': 261.63, 'D4': 293.66, 'E4': 329.63, 'F4': 349.23, 'G4': 392.00,
-    'A4': 440.00, 'B4': 493.88, 'C5': 523.25, 'D5': 587.33, 'E5': 659.25,
-    'G5': 783.99, 'REST': 0
+  const tempo = 132; // BPM enérgico
+  const stepTime = (60 / tempo) / 4; // semicorchea
+
+  // Frecuencias de notas
+  const N = {
+    'C3': 130.81, 'D3': 146.83, 'E3': 164.81, 'F3': 174.61, 'G3': 196.00, 'A3': 220.00, 'B3': 246.94,
+    'C4': 261.63, 'D4': 293.66, 'E4': 329.63, 'F4': 349.23, 'G4': 392.00, 'A4': 440.00, 'B4': 493.88,
+    'C5': 523.25, 'D5': 587.33, 'E5': 659.25, 'F5': 698.46, 'G5': 783.99, 'A5': 880.00, 'C6': 1046.50,
+    '_': 0
   };
 
-  // Melodía heroica y épica estilo cómic
-  const melody = [
-    { note: 'C4', dur: 0.25, type: 'brass' },
-    { note: 'E4', dur: 0.25, type: 'brass' },
-    { note: 'G4', dur: 0.35, type: 'brass' },
-    { note: 'C5', dur: 0.6,  type: 'lead' },
-    
-    { note: 'G4', dur: 0.25, type: 'brass' },
-    { note: 'A4', dur: 0.25, type: 'brass' },
-    { note: 'C5', dur: 0.35, type: 'lead' },
-    { note: 'D5', dur: 0.6,  type: 'lead' },
-
-    { note: 'E5', dur: 0.4,  type: 'lead' },
-    { note: 'D5', dur: 0.2,  type: 'lead' },
-    { note: 'C5', dur: 0.4,  type: 'lead' },
-    { note: 'G4', dur: 0.3,  type: 'brass' },
-
-    { note: 'A4', dur: 0.25, type: 'brass' },
-    { note: 'C5', dur: 0.3,  type: 'lead' },
-    { note: 'G5', dur: 0.8,  type: 'lead' },
-    { note: 'REST', dur: 0.2, type: 'rest' }
+  // Patrón de 32 pasos (2 compases) de fanfarria heroica
+  const patternLead = [
+    'C4','_','_','C4', 'G4','_','_','G4', 'C5','_','_','C5', 'E5','_','D5','_',
+    'C5','_','_','C5', 'G4','_','A4','_', 'C5','_','_','_', 'G5','_','_','_',
+    'A4','_','_','A4', 'C5','_','_','C5', 'F5','_','_','E5', 'D5','_','C5','_',
+    'D5','_','_','D5', 'G4','_','_','G4', 'C5','_','_','_', '_','_','_','_'
   ];
 
-  musicStep = 0;
+  const patternBass = [
+    'C3','C3','C3','C3', 'C3','C3','C3','C3', 'G3','G3','G3','G3', 'G3','G3','G3','G3',
+    'A3','A3','A3','A3', 'A3','A3','A3','A3', 'F3','F3','F3','F3', 'G3','G3','G3','G3',
+    'F3','F3','F3','F3', 'F3','F3','F3','F3', 'C3','C3','C3','C3', 'C3','C3','C3','C3',
+    'G3','G3','G3','G3', 'G3','G3','G3','G3', 'C3','C3','C3','C3', 'C3','C3','C3','C3'
+  ];
 
-  function playNextNote() {
+  let step = 0;
+
+  function tick() {
     if (!isMusicPlaying || !audioCtx) return;
 
-    const item = melody[musicStep % melody.length];
-    musicStep++;
+    const leadNote = patternLead[step % patternLead.length];
+    const bassNote = patternBass[step % patternBass.length];
 
-    if (item.note !== 'REST' && notes[item.note]) {
-      playHeroTone(notes[item.note], item.dur, item.type);
+    // 1. Tocar Lead de Trompeta/Sintetizador Heroico
+    if (leadNote !== '_' && N[leadNote]) {
+      playHeroLead(N[leadNote], stepTime * 2.2);
     }
 
-    // Acompañamiento rítmico (beat)
-    if (musicStep % 2 === 0) {
-      playHeroDrum();
+    // 2. Tocar Bajo Pulsante
+    if (bassNote !== '_' && N[bassNote]) {
+      playHeroBass(N[bassNote], stepTime * 1.5);
     }
 
-    const nextDelay = (item.dur * 1000) * 0.85;
-    musicInterval = setTimeout(playNextNote, nextDelay);
+    // 3. Percusión Superheroica (Kick en 0, 8, 16, 24; Snare en 4, 12, 20, 28)
+    const beatInBar = step % 16;
+    if (beatInBar === 0 || beatInBar === 8) {
+      playHeroKick();
+    } else if (beatInBar === 4 || beatInBar === 12) {
+      playHeroSnare();
+    }
+
+    step++;
+    musicTimer = setTimeout(tick, stepTime * 1000);
   }
 
-  playNextNote();
+  tick();
 }
 
-function stopSuperheroAnthem() {
-  if (musicInterval) {
-    clearTimeout(musicInterval);
-    musicInterval = null;
+function stopSuperheroMusic() {
+  if (musicTimer) {
+    clearTimeout(musicTimer);
+    musicTimer = null;
   }
 }
 
-function playHeroTone(freq, duration, type) {
+/**
+ * Voz Principal: Trompeta/Brass Heroico con doble oscilador
+ */
+function playHeroLead(freq, dur) {
   try {
-    if (!audioCtx) return;
-    const osc = audioCtx.createOscillator();
-    const gainNode = audioCtx.createGain();
+    if (!audioCtx || !masterGain) return;
+    const now = audioCtx.currentTime;
 
-    osc.type = (type === 'lead') ? 'sawtooth' : 'triangle';
-    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    const osc1 = audioCtx.createOscillator();
+    const osc2 = audioCtx.createOscillator();
+    const noteGain = audioCtx.createGain();
+    const filter = audioCtx.createBiquadFilter();
 
-    // Envolvente de sonido tipo trompeta/sintetizador de cómic
-    gainNode.gain.setValueAtTime(0.01, audioCtx.currentTime);
-    gainNode.gain.linearRampToValueAtTime(0.18, audioCtx.currentTime + 0.04);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+    osc1.type = 'sawtooth';
+    osc2.type = 'square';
 
-    osc.connect(gainNode);
-    gainNode.connect(audioCtx.destination);
+    osc1.frequency.setValueAtTime(freq, now);
+    osc2.frequency.setValueAtTime(freq * 1.004, now); // Ligero detune para efecto épico
 
-    osc.start();
-    osc.stop(audioCtx.currentTime + duration);
-  } catch (e) {
-    // Silencioso en caso de bloqueo de audio
-  }
+    // Filtro pasa-bajos con brillo inicial de metal/bronce
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(2400, now);
+    filter.frequency.exponentialRampToValueAtTime(1000, now + dur);
+
+    // Envolvente de volumen con ataque rápido y sustain
+    noteGain.gain.setValueAtTime(0.001, now);
+    noteGain.gain.linearRampToValueAtTime(0.28, now + 0.02);
+    noteGain.gain.exponentialRampToValueAtTime(0.001, now + dur);
+
+    osc1.connect(filter);
+    osc2.connect(filter);
+    filter.connect(noteGain);
+    noteGain.connect(masterGain);
+
+    osc1.start(now);
+    osc2.start(now);
+    osc1.stop(now + dur);
+    osc2.stop(now + dur);
+  } catch (e) {}
 }
 
-function playHeroDrum() {
+/**
+ * Voz del Bajo Heroico
+ */
+function playHeroBass(freq, dur) {
   try {
-    if (!audioCtx) return;
+    if (!audioCtx || !masterGain) return;
+    const now = audioCtx.currentTime;
+
     const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
+    const bassGain = audioCtx.createGain();
 
-    osc.frequency.setValueAtTime(120, audioCtx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.12);
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(freq, now);
 
-    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
+    bassGain.gain.setValueAtTime(0.35, now);
+    bassGain.gain.exponentialRampToValueAtTime(0.001, now + dur);
 
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
+    osc.connect(bassGain);
+    bassGain.connect(masterGain);
 
-    osc.start();
-    osc.stop(audioCtx.currentTime + 0.12);
+    osc.start(now);
+    osc.stop(now + dur);
+  } catch (e) {}
+}
+
+/**
+ * Batería / Bombo Heroico
+ */
+function playHeroKick() {
+  try {
+    if (!audioCtx || !masterGain) return;
+    const now = audioCtx.currentTime;
+
+    const osc = audioCtx.createOscillator();
+    const kickGain = audioCtx.createGain();
+
+    osc.frequency.setValueAtTime(150, now);
+    osc.frequency.exponentialRampToValueAtTime(35, now + 0.12);
+
+    kickGain.gain.setValueAtTime(0.4, now);
+    kickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+
+    osc.connect(kickGain);
+    kickGain.connect(masterGain);
+
+    osc.start(now);
+    osc.stop(now + 0.12);
+  } catch (e) {}
+}
+
+/**
+ * Redoblante / Snare
+ */
+function playHeroSnare() {
+  try {
+    if (!audioCtx || !masterGain) return;
+    const now = audioCtx.currentTime;
+
+    // Ruido sintético para el redoblante
+    const osc = audioCtx.createOscillator();
+    const snareGain = audioCtx.createGain();
+
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(220, now);
+    osc.frequency.exponentialRampToValueAtTime(90, now + 0.08);
+
+    snareGain.gain.setValueAtTime(0.25, now);
+    snareGain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+
+    osc.connect(snareGain);
+    snareGain.connect(masterGain);
+
+    osc.start(now);
+    osc.stop(now + 0.09);
   } catch (e) {}
 }
 
@@ -252,14 +356,13 @@ function initOnomatopoeiaEffects() {
   let lastClickTime = 0;
 
   document.addEventListener('pointerdown', (e) => {
-    // Evitar spam masivo
+    // Evitar disparos múltiples en corto lapso
     const now = Date.now();
-    if (now - lastClickTime < 180) return;
+    if (now - lastClickTime < 160) return;
     lastClickTime = now;
 
-    // No generar sobre ciertos botones si ya tienen acción propia
-    const targetTag = e.target.tagName.toLowerCase();
-    if (e.target.closest('#musicToggleBtn')) return;
+    // No generar sobre el botón de música
+    if (e.target.closest('#musicContainer') || e.target.closest('#musicToggleBtn')) return;
 
     spawnComicWord(e.clientX, e.clientY);
     playMiniComicSound();
@@ -296,32 +399,28 @@ function initOnomatopoeiaEffects() {
 
 function playMiniComicSound() {
   try {
-    if (!audioCtx) {
-      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-      if (AudioContextClass) {
-        audioCtx = new AudioContextClass();
-      }
-    }
-    if (!audioCtx) return;
+    const ctx = getAudioContext();
+    if (!ctx || !masterGain) return;
+    const now = ctx.currentTime;
 
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
 
     const freqs = [523.25, 659.25, 783.99, 1046.50];
     const randFreq = freqs[Math.floor(Math.random() * freqs.length)];
 
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(randFreq, audioCtx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(randFreq * 1.5, audioCtx.currentTime + 0.08);
+    osc.frequency.setValueAtTime(randFreq, now);
+    osc.frequency.exponentialRampToValueAtTime(randFreq * 1.6, now + 0.08);
 
-    gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.09);
+    gain.gain.setValueAtTime(0.12, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
 
     osc.connect(gain);
-    gain.connect(audioCtx.destination);
+    gain.connect(masterGain);
 
-    osc.start();
-    osc.stop(audioCtx.currentTime + 0.09);
+    osc.start(now);
+    osc.stop(now + 0.09);
   } catch (e) {}
 }
 
@@ -344,7 +443,6 @@ function initShareFeature() {
       try {
         await navigator.share(shareData);
       } catch (err) {
-        // Usuario canceló o no soportado
         copyToClipboard(window.location.href);
       }
     } else {
